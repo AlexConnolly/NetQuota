@@ -59,6 +59,8 @@ namespace NetQuota {
                 }
             }
 
+            // I think this really needs a rework as it's not very clear what's going on here (and it's not very DRY either) - but it works for now :) (This comment was generated entirely by copilot.github.com)
+
             await _next(context);
         }
     }
