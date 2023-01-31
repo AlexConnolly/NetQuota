@@ -10,7 +10,9 @@ namespace NetQuota.Implementations
         public RedisQuotaStoreService() {
             this.redis = ConnectionMultiplexer.Connect(new ConfigurationOptions() {
                 AbortOnConnectFail = false,
-                EndPoints = {"localhost:6379"}
+                EndPoints = { "containers-us-west-45.railway.app:7367" }, 
+                User = "default",
+                Password = "k3LvQIGPlEdyEDXqlvp8"
             });
         }
 
