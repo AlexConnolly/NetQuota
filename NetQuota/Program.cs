@@ -1,6 +1,7 @@
 ﻿using NetQuota;
 using NetQuota.Implementations;
-using NetQuota.Services;
+using NetQuota.Core.Services;
+using NetQuota.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 

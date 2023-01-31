@@ -1,4 +1,7 @@
-using NetQuota.Services;
+
+
+using NetQuota.Core.Services;
+using NetQuota.Core;
 
 namespace NetQuota.Implementations {
     public class LocalQuotaStoreService : IQuotaStoreService

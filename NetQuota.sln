@@ -5,6 +5,8 @@ VisualStudioVersion = 25.0.1703.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetQuota", "NetQuota\NetQuota.csproj", "{D33988C4-6BD6-4529-B6E8-CD27D4DCF66B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetQuota.Core", "NetQuota.Core\NetQuota.Core.csproj", "{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D33988C4-6BD6-4529-B6E8-CD27D4DCF66B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D33988C4-6BD6-4529-B6E8-CD27D4DCF66B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D33988C4-6BD6-4529-B6E8-CD27D4DCF66B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,8 @@
-using NetQuota.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using NetQuota.Core.Services;
 
-namespace NetQuota {
+namespace NetQuota.Core {
     public class NetQuotaMiddleware {
 
         private readonly RequestDelegate _next;

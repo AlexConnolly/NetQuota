@@ -1,4 +1,4 @@
-namespace NetQuota {
+namespace NetQuota.Core {
     public class NetQuotaAttribute : Attribute  {
 
         public string Key {get; private set;}

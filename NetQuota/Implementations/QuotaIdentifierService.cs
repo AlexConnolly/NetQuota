@@ -1,4 +1,4 @@
-using NetQuota.Services;
+using NetQuota.Core.Services;
 
 namespace NetQuota.Implementations {
     public class QuotaIdentifierService : IQuotaIdentifierService

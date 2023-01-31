@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetQuota;
+using NetQuota.Core;
 
 namespace QuotaTest.Controllers;
 
