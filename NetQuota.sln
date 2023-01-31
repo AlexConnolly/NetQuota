@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetQuota", "NetQuota\NetQuo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetQuota.Core", "NetQuota.Core\NetQuota.Core.csproj", "{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetQuote.Core.tests", "NetQuote.Core.tests\NetQuote.Core.tests.csproj", "{D62B4193-8B0B-42DA-97B9-0BC0F8A9A633}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66D76FA4-3F41-41B1-AD74-7C2EA8645D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D62B4193-8B0B-42DA-97B9-0BC0F8A9A633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D62B4193-8B0B-42DA-97B9-0BC0F8A9A633}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D62B4193-8B0B-42DA-97B9-0BC0F8A9A633}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D62B4193-8B0B-42DA-97B9-0BC0F8A9A633}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
