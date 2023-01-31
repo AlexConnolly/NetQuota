@@ -1,4 +1,5 @@
 ﻿using NetQuota;
+using NetQuota.Implementations;
 using NetQuota.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add the quota service
-builder.Services.AddSingleton<IQuotaService, LocalQuotaService>();
+builder.Services.AddSingleton<IQuotaStoreService, LocalQuotaStoreService>();
+builder.Services.AddSingleton<IQuotaIdentifierService, QuotaIdentifierService>();
 
 var app = builder.Build();
 
