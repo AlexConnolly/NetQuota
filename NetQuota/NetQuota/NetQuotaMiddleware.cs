@@ -16,8 +16,8 @@ namespace NetQuota {
 
             if(attribute != null && !string.IsNullOrEmpty(attribute.Key)) {
 
-                var quota = attribute.Quota;
-                var period = attribute.Period;
+                var amount = attribute.Amount;
+                var seconds = attribute.Seconds;
                 var key = attribute.Key;
 
                 var identifierService = context.RequestServices.GetService<IQuotaIdentifierService>();
@@ -44,7 +44,7 @@ namespace NetQuota {
 
                                 if(hasQuotaExpired) {
                                     await _next(context);
-                                    await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(period), AmountLeft = quota -1 });
+                                    await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(seconds), AmountLeft = amount -1 });
                                 } else {
                                     context.Response.StatusCode = 429;
                                     await context.Response.WriteAsync($"You have exhausted your quota for '{key}'. Quota resets in {(quotaResult.ExpiresOn - DateTime.UtcNow).TotalSeconds} seconds.");
@@ -53,7 +53,7 @@ namespace NetQuota {
                             }
                         } else {
                             await _next(context);
-                            await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(period), AmountLeft = quota - 1 });
+                            await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(seconds), AmountLeft = amount - 1 });
                         }
                     }
                 }
