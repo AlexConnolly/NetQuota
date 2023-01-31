@@ -32,32 +32,45 @@ namespace NetQuota.Core {
 
                         var quotaStoreService = context.RequestServices.GetService<IQuotaStoreService>();
 
-                        var quotaResult = await quotaStoreService.GetQuotaAsync(identifier, key);
+                        if(quotaStoreService != null)
+                        {
+                            var quotaResult = await quotaStoreService.GetQuotaAsync(identifier, key);
 
-                        if(quotaResult != null) {
-                            
-                            // Check if we have quota
-                            if(quotaResult.AmountLeft != 0) {
-                                await _next(context);
-                                await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = quotaResult.ExpiresOn, AmountLeft = quotaResult.AmountLeft - 1 });
-                            } else {
+                            if (quotaResult != null)
+                            {
 
-                                bool hasQuotaExpired = DateTime.UtcNow > quotaResult.ExpiresOn;
-
-                                if(hasQuotaExpired) {
+                                // Check if we have quota
+                                if (quotaResult.AmountLeft != 0)
+                                {
                                     await _next(context);
-                                    await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(seconds), AmountLeft = amount -1 });
-                                } else {
-                                    context.Response.StatusCode = 429;
-                                    await context.Response.WriteAsync($"You have exhausted your quota for '{key}'. Quota resets in {(quotaResult.ExpiresOn - DateTime.UtcNow).TotalSeconds} seconds.");
-                                    return;
+                                    await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = quotaResult.ExpiresOn, AmountLeft = quotaResult.AmountLeft - 1 });
+                                }
+                                else
+                                {
+
+                                    bool hasQuotaExpired = DateTime.UtcNow > quotaResult.ExpiresOn;
+
+                                    if (hasQuotaExpired)
+                                    {
+                                        await _next(context);
+                                        await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(seconds), AmountLeft = amount - 1 });
+                                    }
+                                    else
+                                    {
+                                        context.Response.StatusCode = 429;
+                                        await context.Response.WriteAsync($"You have exhausted your quota for '{key}'. Quota resets in {(quotaResult.ExpiresOn - DateTime.UtcNow).TotalSeconds} seconds.");
+                                        return;
+                                    }
                                 }
                             }
-                        } else {
-                            await _next(context);
-                            await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(seconds), AmountLeft = amount - 1 });
+                            else
+                            {
+                                await _next(context);
+                                await quotaStoreService.SetQuotaAsync(identifier, key, new Quota() { ExpiresOn = DateTime.UtcNow.AddSeconds(seconds), AmountLeft = amount - 1 });
+                            }
                         }
                     }
+
                 }
             }
 

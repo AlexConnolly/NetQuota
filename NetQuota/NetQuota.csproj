@@ -9,11 +9,15 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'QuotaTest' " />
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.90" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NetQuota.Core\NetQuota.Core.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="StackExchange.Redis" />
   </ItemGroup>
 </Project>
