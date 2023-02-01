@@ -1,5 +1,5 @@
 # NetQuota
-Allows you to implement lightweight quota on top of your .NET application.
+Allows you to implement lightweight quotas on top of your .NET application.
 
 Start by adding the quota store and identifier services in your Program.cs:
 
