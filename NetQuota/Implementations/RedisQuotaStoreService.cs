@@ -10,13 +10,13 @@ namespace NetQuota.Implementations
         public RedisQuotaStoreService() {
             this.redis = ConnectionMultiplexer.Connect(new ConfigurationOptions() {
                 AbortOnConnectFail = false,
-                EndPoints = { "containers-us-west-45.railway.app:7367" }, 
+                EndPoints = { "containers-us-west-176.railway.app:6621" }, 
                 User = "default",
-                Password = "k3LvQIGPlEdyEDXqlvp8"
+                Password = "xV5rNKxwW2FsBOXHjW6T"
             });
         }
 
-        public Task<Quota> GetQuotaAsync(string identifier, string key)
+        public async Task<Quota> GetQuotaAsync(string identifier, string key)
         {
             // Create a redis connection
             var db = redis.GetDatabase();
@@ -29,20 +29,18 @@ namespace NetQuota.Implementations
                 int amountLeft = int.Parse(valueString.Split('@')[0]);
                 DateTime expiresOn = DateTime.Parse(valueString.Split('@')[1]);
 
-                return Task.FromResult(new Quota() { AmountLeft = amountLeft, ExpiresOn = expiresOn});
+                return new Quota() { AmountLeft = amountLeft, ExpiresOn = expiresOn };
             } else {
-                return Task.FromResult<Quota>(null);
+                return null;
             }
         }
 
-        public Task SetQuotaAsync(string identifier, string key, Quota quota)
+        public async Task SetQuotaAsync(string identifier, string key, Quota quota)
         {
             // Create a redis connection
             var db = redis.GetDatabase();
 
             db.StringSet(identifier + ":" + key, quota.AmountLeft + "@" + quota.ExpiresOn.ToString());
-
-            return Task.CompletedTask;
         }
     }
 }
