@@ -11,7 +11,7 @@ namespace NetQuota.Core {
             _next = next;
         }
 
-        private async Task SendResourceExhaustedAsync(HttpContext context, string key, Quota quota)
+        private async Task SendResourceExhaustedAsync(HttpContext context, string key, QuotaInstance quota)
         {
             context.Response.StatusCode = 429;
 
@@ -20,14 +20,14 @@ namespace NetQuota.Core {
             return;
         }
 
-        private async Task<Quota> SetQuotaAsync(IQuotaStoreService quotaStoreService, string identifier, string key, Quota quota)
+        private async Task<QuotaInstance> SetQuotaAsync(IQuotaStoreService quotaStoreService, string identifier, string key, QuotaInstance quota)
         {
             await quotaStoreService.SetQuotaAsync(identifier, key, quota);
 
             return quota;
         }
 
-        private async Task<Quota> GetQuotaAsync(IQuotaStoreService quotaStoreService, string identifier, string key)
+        private async Task<QuotaInstance> GetQuotaAsync(IQuotaStoreService quotaStoreService, string identifier, string key)
         {
             if (quotaStoreService != null)
             {
@@ -39,18 +39,48 @@ namespace NetQuota.Core {
             return null;
         }
 
+        private QuotaDefinition GetDefinitionFromProfile(QuotaProfile profile, string resourceKey)
+        {
+            if (profile == null)
+                return null;
+
+            if (profile.Quotas == null)
+                return null;
+
+            foreach(var definition in profile.Quotas)
+            {
+                if (definition.ResourceKey.ToLower() == resourceKey.ToLower())
+                    return definition;
+            }
+
+            return null;
+        }
+
+        private QuotaDefinition GetQuotaDefinitionFromIdentifier(IQuotaProfileService profileService, string identifier, string resourceKey)
+        {
+            var defaultQuota = profileService.GetDefaultProfile();
+            var identifierQuota = profileService.GetProfileForIdentifier(identifier);
+
+            var defaultDefinition = this.GetDefinitionFromProfile(defaultQuota, resourceKey);
+            var identifierDefinition = this.GetDefinitionFromProfile(identifierQuota, resourceKey);
+
+            // Here, we prioritise the profile based definition
+            if (identifierDefinition != null)
+                return identifierDefinition;
+
+            // If we have no specific profile-based definition we can use the default definition
+            return defaultDefinition;
+        }
+
         public async Task Invoke(HttpContext context) {
 
             var endpoint = context.GetEndpoint();
             var attribute = endpoint?.Metadata.GetMetadata<NetQuotaAttribute>();
 
-            if (attribute != null && !string.IsNullOrEmpty(attribute.Key))
+            if (attribute != null && !string.IsNullOrEmpty(attribute.ResourceKey))
             {
-                var amount = attribute.Amount;
-                var seconds = attribute.Seconds;
-                var key = attribute.Key;
-
                 var identifierService = context.RequestServices.GetService<IQuotaIdentifierService>();
+                var profileService = context.RequestServices.GetService<IQuotaProfileService>();
 
                 // Locally, we may not want quotas
                 if (identifierService != null)
@@ -61,7 +91,7 @@ namespace NetQuota.Core {
                     {
                         var quotaStoreService = context.RequestServices.GetService<IQuotaStoreService>();
 
-                        var contextQuota = await GetQuotaAsync(quotaStoreService, identifier, key);
+                        var contextQuota = await GetQuotaAsync(quotaStoreService, identifier, attribute.ResourceKey);
 
                         if(contextQuota != null)
                         {
@@ -70,25 +100,29 @@ namespace NetQuota.Core {
                                 // check if has expired
                                 if(contextQuota.ExpiresOn <= DateTime.UtcNow)
                                 {
-                                    contextQuota = new Quota()
+                                    var quotaDefinition = this.GetQuotaDefinitionFromIdentifier(profileService, identifier, attribute.ResourceKey);
+
+                                    contextQuota = new QuotaInstance()
                                     {
-                                        AmountLeft = amount,
-                                        ExpiresOn = DateTime.UtcNow.AddSeconds(seconds)
+                                        AmountLeft = quotaDefinition.Amount,
+                                        ExpiresOn = DateTime.UtcNow.AddSeconds(quotaDefinition.Seconds)
                                     };
                                 } else
                                 {
                                     // Quota not expired, send resource exhausted
-                                    await SendResourceExhaustedAsync(context, key, contextQuota);
+                                    await SendResourceExhaustedAsync(context, attribute.ResourceKey, contextQuota);
 
                                     return;
                                 }
                             }
                         } else
                         {
-                            contextQuota = new Quota()
+                            var quotaDefinition = this.GetQuotaDefinitionFromIdentifier(profileService, identifier, attribute.ResourceKey);
+
+                            contextQuota = new QuotaInstance()
                             {
-                                AmountLeft = amount,
-                                ExpiresOn = DateTime.UtcNow.AddSeconds(seconds)
+                                AmountLeft = quotaDefinition.Amount,
+                                ExpiresOn = DateTime.UtcNow.AddSeconds(quotaDefinition.Seconds)
                             };
                         }
 
@@ -96,7 +130,7 @@ namespace NetQuota.Core {
 
                         contextQuota.AmountLeft--;
 
-                        await this.SetQuotaAsync(quotaStoreService, identifier, key, contextQuota);
+                        await this.SetQuotaAsync(quotaStoreService, identifier, attribute.ResourceKey, contextQuota);
 
                         return;
                     }

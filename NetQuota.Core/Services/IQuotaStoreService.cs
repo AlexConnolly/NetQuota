@@ -1,6 +1,6 @@
 namespace NetQuota.Core.Services {
     public interface IQuotaStoreService {
-        Task<Quota> GetQuotaAsync(string identifier, string key);
-        Task SetQuotaAsync(string identifier, string key, Quota quota);
+        Task<QuotaInstance> GetQuotaAsync(string identifier, string key);
+        Task SetQuotaAsync(string identifier, string key, QuotaInstance quota);
     }
 }

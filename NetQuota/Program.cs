@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IQuotaStoreService, RedisQuotaStoreService>();
 builder.Services.AddSingleton<IQuotaIdentifierService, QuotaIdentifierService>();
+builder.Services.AddSingleton<IQuotaProfileService, QuotaProfileService>();
 
 var app = builder.Build();
 
