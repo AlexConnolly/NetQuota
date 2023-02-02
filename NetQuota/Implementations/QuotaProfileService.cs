@@ -1,8 +1,9 @@
 ﻿using NetQuota.Core;
+using NetQuota.Core.Services;
 
 namespace NetQuota.Implementations
 {
-    public class QuotaProfileService : NetQuota.Core.Services.IQuotaProfileService
+    public class QuotaProfileService : IQuotaProfileService
     {
         public QuotaProfile GetDefaultProfile()
         {
